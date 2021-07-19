@@ -21,7 +21,7 @@ def fetch_dollar_data():
 
 def __map_row(date, value):
     return [
-        datetime.datetime.strftime(date, '%d/%m/%Y'), 
+        datetime.datetime.strptime(date, '%d/%m/%Y'), 
         float(value.replace(',', '.'))
     ]
 
