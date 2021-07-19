@@ -66,11 +66,15 @@ def process_index_year(year, index):
 
 
 def save_index_data(outdir=SAVE_DIR, index='IBOVESPA', outfilename='{index}.csv'):
+    index = str(index) if index else 'IBOVESPA'
     outfilename = (str(outfilename) if outfilename is not None else '{index}.csv').format(index=index)
-    with open(path.join(outdir, outfilename), 'wt') as f:
+    outpath = path.join(outdir, outfilename)
+    print(f'Extracting {index} to "{outpath}"')
+    with open(outpath, 'wt') as f:
         csv_writer = csv.writer(f, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
         csv_writer.writerow(['date', 'value'])
-        for year in range(1998, datetime.date.today().year):
+        for year in range(1998, datetime.date.today().year + 1):
+            print(f'\t{index}: year {year}')
             csv_writer.writerows(process_index_year(year, index))
 
 

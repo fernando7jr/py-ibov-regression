@@ -26,7 +26,7 @@ def __map_row(date, value):
     ]
 
 
-def process_dollar_year():
+def process_dollar_data():
     raw_html = fetch_dollar_data()
     html = BeautifulSoup(raw_html, features='html.parser')
     rows = html.select('#grd_DXMainTable > tr:not(:first-child)')
@@ -37,10 +37,13 @@ def process_dollar_year():
 
 
 def save_dollar_data(outdir=SAVE_DIR, outfilename='dollar.csv'):
-    with open(path.join(outdir, outfilename), 'wt') as f:
+    outfilename = str(outfilename) if outfilename is not None else 'dollar.csv'
+    outpath = path.join(outdir, outfilename)
+    print(f'Extracting DailyDollar to "{outpath}"')
+    with open(outpath, 'wt') as f:
         csv_writer = csv.writer(f, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
         csv_writer.writerow(['date', 'value'])
-        csv_writer.writerows(process_dollar_year())
+        csv_writer.writerows(process_dollar_data())
 
 
 if __name__ == '__main__':
