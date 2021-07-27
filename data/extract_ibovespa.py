@@ -67,7 +67,7 @@ def process_index_year(year, index):
 
 def save_index_data(outdir=SAVE_DIR, index='IBOVESPA', outfilename='{index}.csv'):
     index = str(index) if index else 'IBOVESPA'
-    outfilename = (str(outfilename) if outfilename is not None else '{index}.csv').format(index=index)
+    outfilename = (str(outfilename) if outfilename is not None else '{index}.csv').format(index=index.lower())
     outpath = path.join(outdir, outfilename)
     print(f'Extracting {index} to "{outpath}"')
     with open(outpath, 'wt') as f:
