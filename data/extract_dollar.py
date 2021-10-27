@@ -20,10 +20,10 @@ def fetch_dollar_data():
 
 
 def __map_row(date, value):
-    return [
-        datetime.datetime.strptime(date, '%d/%m/%Y'), 
+    return (
+        datetime.datetime.strptime(date, '%d/%m/%Y').strftime('%Y-%m-%d'), 
         float(value.replace(',', '.'))
-    ]
+    )
 
 
 def process_dollar_data():
@@ -44,6 +44,7 @@ def save_dollar_data(outdir=SAVE_DIR, outfilename='dollar.csv'):
         csv_writer = csv.writer(f, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
         csv_writer.writerow(['date', 'value'])
         csv_writer.writerows(process_dollar_data())
+    return outpath
 
 
 if __name__ == '__main__':

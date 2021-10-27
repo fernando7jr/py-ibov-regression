@@ -16,23 +16,15 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 SAVE_DIR = path.dirname(path.realpath(__file__))
 
 
+import requests
+from base64 import encodebytes
+
+
 def fetch_index_data(year, index='IBOVESPA', language='pt-br'):
     data = json.dumps({'year': year, 'index': index, 'language': language}).encode()
     payload = encodebytes(data).decode().rstrip()
     response = requests.get(
         f'https://sistemaswebb3-listados.b3.com.br/indexStatisticsProxy/IndexCall/GetPortfolioDay/{payload}',
-        headers={
-            'sec-ch-ua': 'Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'en-US,en;q=0.9,pt;q=0.8',
-            'sec-ch-ua-mobile': '?0',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-            'x-dtpc': '$104860284_300h3vRKBCFKLHVOPFBLHFRSAHRAEGDKNPUPCA-0e6',
-            'Sec-Fetch-Site': 'same-origin',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Dest': 'empty',
-            'Referer': 'https://sistemaswebb3-listados.b3.com.br/',
-        },
         verify=False
     )
     assert response.status_code == 200, f'Invalid response:\n{response.text}'
@@ -61,8 +53,8 @@ def process_index_year(year, index):
             value = months[month]
             if value is None:
                 continue
-            date = datetime.datetime(year=year, month=month + 1, day=day)
-            yield [date, float(value.replace('.', '').replace(',', '.'))]
+            date = datetime.datetime(year=year, month=month + 1, day=day).strftime('%Y-%m-%d')
+            yield date, float(value.replace('.', '').replace(',', '.'))
 
 
 def save_index_data(outdir=SAVE_DIR, index='IBOVESPA', outfilename='{index}.csv'):
@@ -76,6 +68,7 @@ def save_index_data(outdir=SAVE_DIR, index='IBOVESPA', outfilename='{index}.csv'
         for year in range(1998, datetime.date.today().year + 1):
             print(f'\t{index}: year {year}')
             csv_writer.writerows(process_index_year(year, index))
+    return outpath
 
 
 if __name__ == '__main__':
