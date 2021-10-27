@@ -4,6 +4,7 @@ Data source: http://estatisticas.cetip.com.br/astec/series_v05/paginas/lum_web_v
 """
 
 from bs4 import BeautifulSoup
+from csv import QUOTE_NONNUMERIC
 import datetime
 from io import StringIO
 from os import path
@@ -21,7 +22,7 @@ URL_BASE = 'http://estatisticas.cetip.com.br/astec'
 TODAY = datetime.date.today()
 
 
-def __get_xls():
+def __get_csv():
     year, month, day = str(TODAY.year), str(
         TODAY.month).zfill(2), str(TODAY.day).zfill(2)
     session = requests.Session()
@@ -102,7 +103,7 @@ def __get_xls():
 
 def process_cdi_data():
     return pd.read_csv(
-        __get_xls(),
+        __get_csv(),
         sep='\t',
         skiprows=10,
         names=['date', 'nr_op', 'volume', 'mean', 'daily_factor',
@@ -126,8 +127,10 @@ def save_cdi_data(outdir=SAVE_DIR, outfilename='cdi.csv'):
         sep=',',
         index=False,
         columns=['date', 'mean', 'selic'],
-        header=['date', 'cdi', 'selic']
+        header=['date', 'cdi', 'selic'],
+        quoting=QUOTE_NONNUMERIC
     )
+    return outpath
 
 
 if __name__ == '__main__':
