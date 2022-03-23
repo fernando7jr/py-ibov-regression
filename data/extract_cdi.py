@@ -126,8 +126,8 @@ def save_cdi_data(outdir=SAVE_DIR, outfilename='cdi.csv'):
         decimal='.',
         sep=',',
         index=False,
-        columns=['date', 'mean', 'selic'],
-        header=['date', 'cdi', 'selic'],
+        columns=['date', 'mean'],
+        header=['date', 'cdi'],
         quoting=QUOTE_NONNUMERIC
     )
     return outpath
