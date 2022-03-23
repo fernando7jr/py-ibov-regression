@@ -62,6 +62,13 @@ if __name__ == '__main__' or not path.isfile(DATA_FILENAME):
     print(df.shape)
     print(df.head())
 
+    # create new columns for the fluctuation percentage
+    for col in COLUMNS:
+        df[f'{col}_%'] = df[col].pct_change().fillna(0)
+    print('After calculating fluctuation percentage')
+    print(df.shape)
+    print(df.head())
+
     # export to a new csv file
     df.to_csv(
         DATA_FILENAME,
@@ -71,3 +78,16 @@ if __name__ == '__main__' or not path.isfile(DATA_FILENAME):
         quoting=QUOTE_NONNUMERIC
     )
 
+    # create a new df using feature selection to choose the most relevant columns
+    SELECTABLE_COLUMNS = ['dollar_norm', 'cdi_norm', 'dollar_%', 'cdi_%', 'days_since_1998']
+    TARGET_COLUMN = 'ibovespa_norm'
+    K = 3
+    X, y = df[SELECTABLE_COLUMNS], df[TARGET_COLUMN]
+    select_k_best = SelectKBest(f_regression, k=K)
+    select_k_best.fit(X, y)
+    selected_cols_ids = select_k_best.get_support(indices=True)
+    selected_cols_scores = list(map(lambda i: select_k_best.scores_[i], selected_cols_ids))
+    selected_cols = list(map(lambda i: SELECTABLE_COLUMNS[i], selected_cols_ids))
+
+    with open(MODEL_CONFIG_FILENAME, 'wt') as f:
+        json.dump({'y': TARGET_COLUMN, 'X': selected_cols, 'scores': selected_cols_scores, 'k': K}, f)
