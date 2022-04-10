@@ -85,9 +85,12 @@ if __name__ == '__main__' or not path.isfile(DATA_FILENAME):
     X, y = df[SELECTABLE_COLUMNS], df[TARGET_COLUMN]
     select_k_best = SelectKBest(f_regression, k=K)
     select_k_best.fit(X, y)
+
+    # identify the columns by the index
     selected_cols_ids = select_k_best.get_support(indices=True)
     selected_cols_scores = list(map(lambda i: select_k_best.scores_[i], selected_cols_ids))
     selected_cols = list(map(lambda i: SELECTABLE_COLUMNS[i], selected_cols_ids))
 
+    # save to a json file
     with open(MODEL_CONFIG_FILENAME, 'wt') as f:
         json.dump({'y': TARGET_COLUMN, 'X': selected_cols, 'scores': selected_cols_scores, 'k': K}, f)
