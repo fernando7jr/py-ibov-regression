@@ -12,7 +12,7 @@ RANDOM_SEED = 42  # Constant integer value for the random state params
 
 df = pd.read_csv(DATA_FILENAME)
 config = load_model_config()
-y_col, X_cols = config['y'], config['X']
+y_col, X_cols, k = config['y'], config['X'], config['k']
 X, y = df[X_cols], df[y_col]
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -20,8 +20,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 def plot_results(y_pred):
-    fig, sub_plts = plt.subplots(3, 1)
-    for i in range(0, 3):
+    fig, sub_plts = plt.subplots(k, 1)
+    for i in range(0, k):
         col = X_cols[i]
         ax = sub_plts[i]
         ax.scatter(X_test[col], y_test, color="black", label='Real')
@@ -69,3 +69,11 @@ random_forest_model2_y_pred = random_forest_model2.predict(X_test)
 test_model(random_forest_model2, random_forest_model2_y_pred)
 plot_results(random_forest_model2_y_pred)
 
+
+# save the model
+
+import pickle
+
+f = open('model.bin', 'wb')
+pickle.dump(random_forest_model, f)
+f.close()

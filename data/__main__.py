@@ -1,4 +1,4 @@
-from . import save_cdi_data, save_dollar_data, save_index_data, SAVE_DIR, DATA_FILENAME, MODEL_CONFIG_FILENAME, path
+from . import save_cdi_data, save_dollar_data, save_index_data, SAVE_DIR, DATA_FILENAME, MODEL_CONFIG_FILENAME, path, to_days_since_1998
 
 
 import datetime
@@ -7,13 +7,6 @@ import pandas as pd
 from csv import QUOTE_NONNUMERIC
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_selection import SelectKBest, f_regression
-
-
-BASE_DATE = datetime.date(1998, 1, 1)
-
-def to_days_since_1998(d):
-    delta = datetime.date.fromisoformat(d) - BASE_DATE
-    return delta.days
 
 
 def __get_filename(outfilename, func):
