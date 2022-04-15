@@ -31,7 +31,7 @@ MODELS = {
 
 
 print('''Esse programa não garante o seus resultados e não se responsabiliza pelo mesmos.
-O modelo utilizado é fruto de um projeto de pesquisa com fins acadêmicos. Todo o projeto está disponível em: https://github.com/fernando7jr/tcc
+O modelo utilizado é fruto de um projeto de pesquisa com fins acadêmicos. Todo o projeto está disponível em: https://github.com/fernando7jr/py-ibov-regression
 Funcionamento:
   * Informe a data no formato DD/MM/YYYY.
   * O programa calcula com base no modelo de aprendizado de máquina qual a pontuação possível de acordo com os paramêtros informados.
